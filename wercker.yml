@@ -4,7 +4,7 @@ box:
   username: $QUAY_USERNAME
   password: $QUAY_PASSWORD
   tag: oow
-  cmd: /bin/bash
+  entrypoint: /bin/bash -c
  
 build:
  steps:
