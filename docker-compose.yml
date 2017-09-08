@@ -1,0 +1,21 @@
+version: '3'
+services:
+  weblogic:
+    image: quay.io/ravi_r_singhal/weblogic:oow
+    entrypoint: /u01/oracle/entrypoint.sh
+    ports:
+    - "7001:7001"
+    links:
+    - database
+  database:
+    #image: quay.io/markxnelson/database:oow
+    image: container-registry.oracle.com/database/enterprise:12.1.0.2   
+    entrypoint: /home/oracle/setup/dockerInit.sh
+    shm_size: 8g
+    environment:
+      DB_SID: OraDoc
+      DB_PDB: OraPdb 
+      DB_PASSWD: Welcome1 
+      DB_DOMAIN: my.domain.com
+      DB_BUNDLE: basic
+      DB_MEMORY: 8g

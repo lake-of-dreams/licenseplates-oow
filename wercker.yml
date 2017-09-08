@@ -1,0 +1,34 @@
+# Copyright 2017, Oracle Corporation and/or affiliates.  All rights reserved.
+box:
+  id: quay.io/ravi_r_singhal/weblogic
+  username: $QUAY_USERNAME
+  password: $QUAY_PASSWORD
+  tag: oow
+  ports:
+   - "7001"
+ 
+build:
+ steps:
+  - script: 
+     name: "Create Application war" 
+     code: | 
+      echo "Check for Maven repo access"      
+      status="$(curl --max-time 5 -Is https://repo.maven.apache.org | head -1)"
+      validate=( $status )
+      if [ "${validate[1]}" == "200" ]; then
+        cd $WERCKER_SOURCE_DIR
+        mvn clean install
+        cp target/licenseplates.war /u01/oracle/.
+      else
+        echo "No internet access.Will use the prebuilt war"
+      fi     
+  - internal/docker-push:
+        name: "Push to docker repo"
+        repository: quay.io/ravi_r_singhal/weblogic
+        registry: https://quay.io
+        username: $QUAY_USERNAME
+        password: $QUAY_PASSWORD
+        tag: oow
+        entrypoint: /u01/oracle/entrypoint.sh
+        ports: "7001"
+        user: root
