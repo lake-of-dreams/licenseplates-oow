@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: weblogic
+  labels:
+    app: weblogic
+spec:
+  containers: 
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: weblogic
+  template:
+    metadata:
+      name: weblogic
+      labels: 
+        app: weblogic
+    spec:
+      containers: 
+      - name: weblogic
+        command: 
+        - /u01/oracle/entrypoint.sh
+        image: quay.io/ravi_r_singhal/weblogic:oow
+        ports:
+        - containerPort: 7001
+          hostPort: 7001
+      imagePullSecrets: 
+      - name: quaysecret
